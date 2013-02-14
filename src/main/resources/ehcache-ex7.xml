@@ -1,32 +1,74 @@
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
-         updateCheck="true" monitoring="autodetect"
+         updateCheck="true" monitoring="on"
          dynamicConfig="true"
-         maxBytesLocalHeap="400m" maxBytesLocalOffHeap="400m">
+         maxBytesLocalHeap="400m" maxBytesLocalOffHeap="400m"
+        >
 
-  <cache eternal="false"
-         timeToIdleSeconds="30"
-          timeToLiveSeconds="30"
-         name="wine1"
-         maxBytesLocalHeap="200m"
-         overflowToOffHeap="true"
-      >
-  </cache>
+    <managementRESTService enabled="true" bind="localhost:9888"/>
 
-  <cache eternal="false"
-         timeToIdleSeconds="30"
-          timeToLiveSeconds="30"
-         name="wine2"
-         overflowToOffHeap="true"
-      >
-  </cache>
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine1"
+           maxBytesLocalHeap="200m"
+           overflowToOffHeap="true"
+            >
+    </cache>
 
-  <cache eternal="false"
-         timeToIdleSeconds="30"
-          timeToLiveSeconds="30"
-         name="wine3"
-         maxBytesLocalOffHeap="40%"
-      >
-  </cache>
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine2"
+           overflowToOffHeap="true"
+            >
+    </cache>
+
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine3"
+            >
+        <!--maxBytesLocalOffHeap="40%"-->
+
+
+    </cache>
+
+
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine4">
+        <cacheWriter writeMode="write_behind" notifyListenersOnException="true" maxWriteDelay="20" rateLimitPerSecond="5"
+                     writeCoalescing="true" writeBatching="false" writeBatchSize="20"
+                     retryAttempts="2" retryAttemptDelaySeconds="2"/>
+        <!--maxBytesLocalOffHeap="40%"-->
+
+    </cache>
+
+
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine5">
+
+        <!--maxBytesLocalOffHeap="40%"-->
+
+        <persistence strategy="localRestartable" synchronousWrites="false"/>
+    </cache>
+
+    <cache eternal="false"
+           timeToIdleSeconds="30"
+           timeToLiveSeconds="30"
+           name="wine9"
+           maxBytesLocalHeap="200m"
+           overflowToOffHeap="true"
+           maxBytesLocalOffHeap="40%"
+           statistics="true"
+            >
+    </cache>
+
+
+    <diskStore path="/tmp/toto"/>
 
 </ehcache>

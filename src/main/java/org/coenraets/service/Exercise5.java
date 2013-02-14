@@ -1,6 +1,7 @@
 package org.coenraets.service;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import org.coenraets.model.Wine;
 
@@ -13,7 +14,10 @@ public class Exercise5 implements WineService {
   private Cache wineCache;
 
   public Exercise5() {
-    //TODO
+
+	  wineCache = CacheManager.create( "src/main/resources/ehcache-ex7.xml" ).getCache( "wine5" );
+
+	  wineCache.registerCacheWriter( new MyCacheWriter() );
   }
 
   @Override

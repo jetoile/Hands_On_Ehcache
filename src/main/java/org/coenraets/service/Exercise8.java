@@ -1,5 +1,8 @@
 package org.coenraets.service;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 import net.sf.ehcache.pool.sizeof.AgentSizeOf;
 import org.coenraets.model.Wine;
 import org.coenraets.util.WineBuilder;
@@ -28,7 +31,9 @@ public class Exercise8 {
   public static void main(String[] args) {
     Runtime runtime = Runtime.getRuntime();
 
-    Map<Integer, Wine> container = new HashMap<Integer, Wine>();
+
+	  Cache container = CacheManager.create( "src/main/resources/ehcache-ex7.xml" ).getCache( "wine9" );
+
 
     AgentSizeOf sizeOfEngine = new AgentSizeOf();
     for (int i = 0; i < 10; i++) {
@@ -56,9 +61,9 @@ public class Exercise8 {
     Runtime runtime = Runtime.getRuntime();
     SecureRandom rnd = new SecureRandom();
     int cnt = 0;
-    Map<Integer, Wine> container;
+    Cache container;
 
-    public Producer(Map<Integer, Wine> container) {
+    public Producer(Cache container) {
       this.container = container;
     }
 
@@ -68,10 +73,17 @@ public class Exercise8 {
 
       while (true) {
         if (cnt > 14000000) {
-          container.remove(rnd.nextInt(container.size()));
+          container.remove(rnd.nextInt(container.getSize()));
         }
-        container.put(cnt++, WineBuilder.next());
-      }
+        container.put(new Element( cnt++, WineBuilder.next()));
+		  try {
+			  sleep(10);
+		  }
+		  catch (InterruptedException e) {
+			  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		  }
+
+	  }
     }
 
   }
@@ -79,9 +91,9 @@ public class Exercise8 {
   public static class Consumer extends Thread {
 
     Random rnd = new Random();
-    Map<Integer, Wine> container;
+    Cache container;
 
-    public Consumer(Map<Integer, Wine> container) {
+    public Consumer(Cache container) {
       this.container = container;
     }
 
@@ -89,13 +101,13 @@ public class Exercise8 {
     public void run() {
       System.out.println("Consumer started....");
       try {
-        sleep(1000);
+        sleep(100);
       } catch (InterruptedException e) {
         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }
 
       while (true) {
-        int size = container.size();
+        int size = container.getSize();
         int key = rnd.nextInt(size);
         long start = System.currentTimeMillis();
         container.get(key);
